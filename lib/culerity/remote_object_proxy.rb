@@ -34,6 +34,7 @@ module Culerity
     # straight through, otherwise it will be wrapped in a lambda string before sending.
     #
     def send_remote(name, *args, &blk)
+      puts "send_remote called with #{name} #{args} #{block_to_string(&blk) if block_given?}"
       input = [remote_object_id, %Q{"#{name}"}, *args.map{|a| a.inspect}]
       input << block_to_string(&blk) if block_given?
       @io << "[#{input.join(", ")}]\n"
@@ -47,6 +48,7 @@ module Culerity
     private
 
     def process_result(result)
+      puts "Received data: #{result}"
       res = eval result
       if res.first == :return
         res[1]

@@ -9,8 +9,14 @@ module Culerity
       @proxies = {}
       @browsers = []
 
+      f = File.open('/tmp/celerity.log', 'w')
       while(true)
-        call = eval _in.gets.to_s.strip
+        data = _in.gets.to_s.strip
+        f << "data: #{data}\n"
+        # call = eval _in.gets.to_s.strip
+        call = eval data
+        STDERR.puts "Celerity received Message"
+        STDERR.puts call.inspect
         return if call == ["_exit_"]
         next(close_browsers) if call == ["_close_browsers_"]
         unless call.nil?
@@ -34,6 +40,11 @@ module Culerity
     end
     
     private
+    
+    def d(s)
+      _out << "[:debug, '#{s}']\n"
+    end
+    
     
     def configure_browser(options)
       @browser_options = options
